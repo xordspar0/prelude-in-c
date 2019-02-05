@@ -13,10 +13,14 @@ An implementation of Bach's [Prelude in C, BWV
 ## Design
 
 * The music should somehow be defined by code
-	* Encode it in an array and render to a waveform? Kinda boring...also, it
-	  would be very hard to compose music by writing bytes into an array.
+	* Encode waveforms in an array? Kinda boring...also, it would be very hard
+	  to compose music by writing bytes into an array.
 	* Write it in a MIDI kind of representation and write a player that can
 	  generate sound from that?
+	* Write C arrays that look like a music tracker table? Cool but
+	  potientially complicated
+	* Just use simple strings that are a subset of
+	  [MML](https://en.wikipedia.org/wiki/Music_Macro_Language)
 * No third-party libraries. I actually want to learn the platform-specific
   APIs.
 * Build it with a plain Makefile. I'm interested in learning how to write
