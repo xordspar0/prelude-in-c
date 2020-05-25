@@ -5,7 +5,7 @@ CC = cc
 CFLAGS = -Wall -g -pedantic
 
 prelude: prelude.c
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) prelude.c -o $@
 
 .PHONY: clean
 clean:
