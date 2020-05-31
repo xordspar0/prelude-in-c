@@ -11,7 +11,7 @@ ifeq ($(platform), Linux)
 	platform_sound = sound/linux.c 
 	LDFLAGS += -lpulse -lpulse-simple
 else
-	platform_sound := Not implemented
+	platform_sound = $(error Platform not supported)
 endif
 platform_object = $(platform_sound:.c=.o)
 
@@ -22,7 +22,7 @@ prelude.o: prelude.c sound.h
 sound.o: $(platform_object)
 	cp $< $@
 
-$(platform_object: $(platform_sound) sound.h
+$(platform_object): $(platform_sound) sound.h
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

@@ -1,0 +1,14 @@
+---
+- hosts: netbsd
+  remote_user: root
+  vars:
+    pkg_path: http://cdn.NetBSD.org/pub/pkgsrc/packages/NetBSD/amd64/9.0/All/
+  tasks:
+    - name: Install pkgin
+      command:
+        cmd: /usr/bin/env PKG_PATH="{{ pkg_path }}" /usr/sbin/pkg_add -v pkgin
+        creates: /usr/pkg/bin/pkgin
+    - name: Install gmake
+      pkgin:
+        name: gmake
+        state: present

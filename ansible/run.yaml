@@ -1,0 +1,15 @@
+---
+- hosts: all
+  vars:
+    user: jordan
+    srcdir: /home/{{user}}/src/prelude
+  tasks:
+    - name: Copy source
+      copy:
+        src: ../
+        dest: "{{srcdir}}"
+    - name: Compile
+      command:
+        chdir: "{{srcdir}}"
+        cmd: gmake
+        #    - name: Execute
