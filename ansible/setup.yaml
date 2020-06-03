@@ -8,6 +8,9 @@
       command:
         cmd: /usr/bin/env PKG_PATH="{{ pkg_path }}" /usr/sbin/pkg_add -v pkgin
         creates: /usr/pkg/bin/pkgin
+    - name: Update pkg_summary
+      pkgin:
+        update_cache: yes
     - name: Install gmake
       pkgin:
         name: gmake
