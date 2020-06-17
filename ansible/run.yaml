@@ -6,7 +6,8 @@
   tasks:
     - name: Copy source
       synchronize:
-        src: ../
+        # Why do we need to go up 2 directories here? Bug in syncronize module?
+        src: ../../
         dest: "{{srcdir}}"
         rsync_opts:
           - "--exclude=.git"
