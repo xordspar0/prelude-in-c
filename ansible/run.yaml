@@ -5,9 +5,15 @@
     srcdir: /home/{{user}}/src/prelude
   tasks:
     - name: Copy source
-      copy:
+      synchronize:
         src: ../
         dest: "{{srcdir}}"
+        rsync_opts:
+          - "--exclude=.git"
+    - name: Prepare
+      command:
+        chdir: "{{srcdir}}"
+        cmd: gmake clean
     - name: Compile
       command:
         chdir: "{{srcdir}}"

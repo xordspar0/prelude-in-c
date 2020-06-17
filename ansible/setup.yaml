@@ -11,6 +11,10 @@
     - name: Update pkg_summary
       pkgin:
         update_cache: yes
+    - name: Install rsync
+      pkgin:
+        name: rsync
+        state: present
     - name: Install gmake
       pkgin:
         name: gmake
