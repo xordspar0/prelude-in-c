@@ -10,6 +10,8 @@ platform != uname -s
 ifeq ($(platform), Linux)
 	platform_sound = sound/linux.c 
 	LDFLAGS += -lpulse -lpulse-simple
+else ifeq ($(platform), NetBSD)
+	platform_sound = sound/netbsd.c
 else
 	platform_sound = $(error Platform not supported)
 endif

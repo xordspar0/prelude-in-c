@@ -19,4 +19,7 @@
       command:
         chdir: "{{srcdir}}"
         cmd: gmake
-        #    - name: Execute
+    - name: Execute
+      command:
+        chdir: "{{srcdir}}"
+        cmd: ./prelude
