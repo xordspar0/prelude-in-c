@@ -18,9 +18,9 @@ int main(int argc, char *argv[])
 
 	songbuf_t buf[1024];
 	for (;;) {
-		fill_buf(buf, sizeof buf);
+		fill_buf(buf, sizeof buf / sizeof buf[0]);
 
-		err = sound_play(buf, sizeof buf);
+		err = sound_play(buf, sizeof buf / sizeof buf[0]);
 		if (err != 0) {
 			printf("%s: Failed to play sound\n", argv[0]);
 			return 1;
