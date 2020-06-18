@@ -3,6 +3,8 @@
 #include <pulse/error.h>
 #include <pulse/simple.h>
 
+#include "../sound.h"
+
 static pa_simple *stream = NULL;
 
 int sound_open() {
@@ -33,14 +35,12 @@ int sound_open() {
 	return 0;
 }
 
-int sound_play() {
+int sound_play(songbuf_t *buf, size_t bufsize) {
 	int err = 0;
-
-	for (int t = 0; ; t++) {
-		if (pa_simple_write(stream, &t, sizeof t, &err) < 0) {
-			fprintf(stderr, "Failed to write to pulseaudio stream: %s", pa_strerror(err));
-			return 1;
-		}
+	int count = pa_simple_write(stream, &buf, bufsize, &err);
+	if (count < 0) {
+		fprintf(stderr, "Failed to write to pulseaudio stream: %s", pa_strerror(err));
+		return 1;
 	}
 
 	return 0;

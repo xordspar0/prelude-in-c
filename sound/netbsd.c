@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include "../sound.h"
+
 static int stream = 0;
 
 int sound_open() {
@@ -14,15 +16,11 @@ int sound_open() {
 	return 0;
 }
 
-int sound_play() {
-	int err = 0;
-
-	for (int t = 0; ; t++) {
-		err = write(stream, &t, sizeof t);
-		if (err < 0) {
-			perror("Failed to write to stream");
-			return 1;
-		}
+int sound_play(songbuf_t *buf, size_t bufsize) {
+	int err = write(stream, buf, bufsize);
+	if (err < 0) {
+		perror("Failed to write to stream");
+		return 1;
 	}
 
 	return 0;
