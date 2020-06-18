@@ -11,9 +11,9 @@ int sound_open() {
 	pa_sample_spec spec;
 	int err = 0;
 
-	spec.format = PA_SAMPLE_FLOAT32LE;
+	spec.format = SOUND_SAMPLE_PRECISION;
 	spec.channels = 1;
-	spec.rate = 44100;
+	spec.rate = SOUND_SAMPLE_RATE;
 
 	stream = pa_simple_new(
 		NULL,

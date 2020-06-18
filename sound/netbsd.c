@@ -18,9 +18,9 @@ int sound_open() {
 
 	audio_info_t info;
 	AUDIO_INITINFO(&info);
-	info.play.sample_rate = 44100;
+	info.play.sample_rate = SOUND_SAMPLE_RATE;
 	info.play.channels = 1;
-	info.play.precision = 32;
+	info.play.precision = SOUND_SAMPLE_PRECISION;
 	info.play.encoding = AUDIO_ENCODING_SLINEAR;
 
 	int err = ioctl(stream, AUDIO_SETINFO, &info);
