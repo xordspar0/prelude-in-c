@@ -3,7 +3,7 @@
 # how to make it work with the conditional compiling and linking.
 
 CC = cc
-CFLAGS = -Wall -g -pedantic
+CFLAGS = -Wall -Werror -g -pedantic
 LDFLAGS =
 
 platform != uname -s
