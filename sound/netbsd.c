@@ -33,8 +33,8 @@ int sound_open() {
 }
 
 int sound_play(songbuf_t *buf, size_t bufsize) {
-	int err = write(stream, buf, bufsize);
-	if (err < 0) {
+	int count = write(stream, buf, bufsize);
+	if (count < 0) {
 		perror("Failed to write to stream");
 		return 1;
 	}
