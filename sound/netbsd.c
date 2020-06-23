@@ -1,4 +1,7 @@
+#include <assert.h>
 #include <fcntl.h>
+#include <limits.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
@@ -33,7 +36,14 @@ int sound_open() {
 }
 
 int sound_play(songbuf_t *buf, size_t bufsize) {
-	int count = write(stream, buf, bufsize);
+	uint32_t ibuf[bufsize];
+	assert(sizeof buf[0] == sizeof ibuf[0]);
+
+	for (int i = 0; i < bufsize; i++) {
+		ibuf[i] = buf[i] * UINT32_MAX;
+	}
+
+	int count = write(stream, ibuf, bufsize);
 	if (count < 0) {
 		perror("Failed to write to stream");
 		return 1;
