@@ -5,11 +5,12 @@
 CC = cc
 CFLAGS = -Wall -Werror -g -pedantic
 LDFLAGS =
+LDLIBS =
 
 platform != uname -s
 ifeq ($(platform), Linux)
 	platform_sound = sound/linux.c 
-	LDFLAGS += -lpulse -lpulse-simple
+	LDLIBS += -lpulse -lpulse-simple
 else ifeq ($(platform), NetBSD)
 	platform_sound = sound/netbsd.c
 else
@@ -18,7 +19,7 @@ endif
 platform_object = $(platform_sound:.c=.o)
 
 prelude: prelude.o sound.o
-	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
+	$(CC) -o $@ $(CFLAGS) $(LDFLAGS) $^ $(LDLIBS)
 
 prelude.o: prelude.c sound.h
 sound.o: $(platform_object)
@@ -27,7 +28,7 @@ sound.o: $(platform_object)
 $(platform_object): $(platform_sound) sound.h
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) -o $@ $< $(CFLAGS) -c
 
 .PHONY: clean
 clean:
