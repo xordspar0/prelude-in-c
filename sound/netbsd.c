@@ -36,11 +36,11 @@ int sound_open() {
 }
 
 int sound_play(float *buf, size_t bufsize) {
-	uint32_t ibuf[bufsize];
-	assert(sizeof buf[0] == sizeof ibuf[0]);
+	size_t n_items = bufsize / sizeof buf[0];
+	int32_t ibuf[n_items];
 
-	for (int i = 0; i < bufsize; i++) {
-		ibuf[i] = buf[i] * UINT32_MAX;
+	for (int i = 0; i < n_items; i++) {
+		ibuf[i] = buf[i] * INT32_MAX;
 	}
 
 	int count = write(stream, ibuf, bufsize);

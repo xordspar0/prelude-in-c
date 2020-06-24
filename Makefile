@@ -5,7 +5,7 @@
 CC = cc
 CFLAGS = -Wall -Werror -g -pedantic
 LDFLAGS =
-LDLIBS =
+LDLIBS = -lm
 
 platform != uname -s
 ifeq ($(platform), Linux)
