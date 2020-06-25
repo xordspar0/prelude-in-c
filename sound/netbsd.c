@@ -23,7 +23,7 @@ int sound_open() {
 	AUDIO_INITINFO(&info);
 	info.play.sample_rate = SOUND_SAMPLE_RATE;
 	info.play.channels = 1;
-	info.play.precision = SOUND_SAMPLE_PRECISION;
+	info.play.precision = 32;
 	info.play.encoding = AUDIO_ENCODING_SLINEAR;
 
 	int err = ioctl(stream, AUDIO_SETINFO, &info);
@@ -35,7 +35,7 @@ int sound_open() {
 	return 0;
 }
 
-int sound_play(songbuf_t *buf, size_t bufsize) {
+int sound_play(float *buf, size_t bufsize) {
 	uint32_t ibuf[bufsize];
 	assert(sizeof buf[0] == sizeof ibuf[0]);
 

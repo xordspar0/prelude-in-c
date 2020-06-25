@@ -11,7 +11,7 @@ int sound_open() {
 	pa_sample_spec spec;
 	int err = 0;
 
-	spec.format = SOUND_SAMPLE_PRECISION;
+	spec.format = PA_SAMPLE_FLOAT32LE;
 	spec.channels = 1;
 	spec.rate = SOUND_SAMPLE_RATE;
 
@@ -35,7 +35,7 @@ int sound_open() {
 	return 0;
 }
 
-int sound_play(songbuf_t *buf, size_t bufsize) {
+int sound_play(float *buf, size_t bufsize) {
 	int err = 0;
 	int count = pa_simple_write(stream, buf, bufsize, &err);
 	if (count < 0) {

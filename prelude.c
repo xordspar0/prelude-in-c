@@ -2,7 +2,7 @@
 
 #include "sound.h"
 
-void fill_buf(songbuf_t *buf, size_t bufsize) {
+void fill_buf(float *buf, size_t bufsize) {
 	for (int i = 0; i < bufsize; i++) {
 		buf[i] = i;
 	}
@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	songbuf_t buf[1024];
+	float buf[1024];
 	for (;;) {
 		fill_buf(buf, sizeof buf / sizeof buf[0]);
 
