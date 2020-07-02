@@ -6,13 +6,18 @@
 #define FREQ 440
 #define AMPLITUDE 1
 
-static int t = 0;
+/*
+ * Returns the number of bytes written to the buffer.
+ */
+int fill_buf(float *buf, size_t bufsize, int offset) {
+	int initial_offset = offset;
 
-void fill_buf(float *buf, size_t bufsize) {
 	for (int i = 0; i < bufsize; i++) {
-		buf[i] = (2 * AMPLITUDE / M_PI) * asinf(sinf(t * 2 * M_PI / (SOUND_SAMPLE_RATE/FREQ)));
-		t++;
+		buf[i] = (2 * AMPLITUDE / M_PI) * asinf(sinf(offset * 2 * M_PI / (SOUND_SAMPLE_RATE/FREQ)));
+		offset++;
 	}
+
+	return offset - initial_offset;
 }
 
 int main(int argc, char *argv[])
@@ -23,9 +28,10 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
+	int sample = 0;
 	float buf[1024];
 	for (;;) {
-		fill_buf(buf, sizeof buf / sizeof buf[0]);
+		sample += fill_buf(buf, sizeof buf / sizeof buf[0], sample);
 
 		err = sound_play(buf, sizeof buf);
 		if (err != 0) {
