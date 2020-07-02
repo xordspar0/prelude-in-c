@@ -28,7 +28,7 @@ int sound_open() {
 	);
 
 	if (stream == NULL) {
-		fprintf(stderr, "Failed to open pulseaudio stream: %s", pa_strerror(err));
+		fprintf(stderr, "Failed to open pulseaudio stream: %s\n", pa_strerror(err));
 		return 1;
 	}
 
@@ -39,7 +39,7 @@ int sound_play(float *buf, size_t bufsize) {
 	int err = 0;
 	int count = pa_simple_write(stream, buf, bufsize, &err);
 	if (count < 0) {
-		fprintf(stderr, "Failed to write to pulseaudio stream: %s", pa_strerror(err));
+		fprintf(stderr, "Failed to write to pulseaudio stream: %s\n", pa_strerror(err));
 		return 1;
 	}
 
