@@ -12,7 +12,8 @@
 
 static int stream = 0;
 
-int sound_open() {
+int sound_open()
+{
 	stream = open("/dev/sound", O_WRONLY);
 	if (stream < 0) {
 		perror("Failed to open stream");
@@ -35,7 +36,8 @@ int sound_open() {
 	return 0;
 }
 
-int sound_play(float *buf, size_t bufsize) {
+int sound_play(float *buf, size_t bufsize)
+{
 	size_t n_items = bufsize / sizeof buf[0];
 	int32_t ibuf[n_items];
 
@@ -52,7 +54,8 @@ int sound_play(float *buf, size_t bufsize) {
 	return 0;
 }
 
-void sound_close() {
+void sound_close()
+{
 	int err = close(stream);
 	if (err < 0) {
 		perror("Failed to close stream");
