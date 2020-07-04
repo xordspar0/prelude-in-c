@@ -1,44 +1,68 @@
+#include <errno.h>
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "sound.h"
 
-#define FREQ 440
 #define AMPLITUDE 1
+#define BPM 80
+#define SECONDS_PER_MINUTE 60
 
 /*
- * Returns the number of bytes written to the buffer.
+ * Note is the pitch in Hz.
+ * Duration is how many seconds to write into the buffer.
+ *
+ * Returns the size of the new buffer in bytes.
  */
-int fill_buf(float *buf, size_t bufsize, int offset) {
-	int initial_offset = offset;
-
-	for (int i = 0; i < bufsize; i++) {
-		buf[i] = (2 * AMPLITUDE / M_PI) * asinf(sinf(offset * 2 * M_PI / (SOUND_SAMPLE_RATE/FREQ)));
-		offset++;
+size_t gen_note(float **bufptr, int note, double duration)
+{
+	size_t length = duration * SOUND_SAMPLE_RATE;
+	float *buf = calloc(length, sizeof (float));
+	if (buf == NULL) {
+		if (errno != 0) {
+			perror("gen_note failed to allocate a buffer");
+		}
+		return 0;
 	}
 
-	return offset - initial_offset;
+	for (int i = 0; i < length; i++) {
+		buf[i] = (2 * AMPLITUDE / M_PI) * asinf(sinf(i * 2 * M_PI / (SOUND_SAMPLE_RATE/note)));
+	}
+
+	*bufptr = buf;
+	return length * sizeof (float);
+}
+
+void song_play(int song[], size_t length)
+{
+	double t = 0;
+	float *buf = NULL;
+	for (int i = 0; i < length; i++) {
+		size_t size = gen_note(&buf, song[i], (double)SECONDS_PER_MINUTE/BPM);
+
+		int err = sound_play(buf, size);
+		if (err != 0) {
+			fputs("Failed to play sound\n", stderr);
+			return;
+		}
+
+		free(buf);
+		t += size;
+	}
 }
 
 int main(int argc, char *argv[])
 {
 	int err = sound_open();
 	if (err != 0) {
-		printf("%s: Failed to initialize sound\n", argv[0]);
+		fprintf(stderr, "%s: Failed to initialize sound\n", argv[0]);
 		return 1;
 	}
 
-	int sample = 0;
-	float buf[1024];
-	for (;;) {
-		sample += fill_buf(buf, sizeof buf / sizeof buf[0], sample);
-
-		err = sound_play(buf, sizeof buf);
-		if (err != 0) {
-			printf("%s: Failed to play sound\n", argv[0]);
-			return 1;
-		}
-	}
+	int song[] = {440, 480, 1000, 200};
+	size_t song_length = sizeof song / sizeof song[0];
+	song_play(song, song_length);
 
 	sound_close();
 
