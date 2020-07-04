@@ -5,8 +5,8 @@
 
 #include "sound.h"
 
-#define AMPLITUDE 1
-#define BPM 80
+#define AMPLITUDE 0.8
+#define BPM 200
 #define SECONDS_PER_MINUTE 60
 
 /*
@@ -73,6 +73,9 @@ size_t gen_note(float **bufptr, int note, double duration)
 	return length * sizeof(float);
 }
 
+/*
+ * TODO: Remove sudden waveform changes between notes.
+ */
 void song_play(int song[], size_t length)
 {
 	double t = 0;
@@ -101,7 +104,12 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	int song[] = { 40, 50, 60 };
+	int song[] = {
+		25, 29, 32, 37, 41, 32, 37, 41, 25, 29, 32, 37, 41, 32, 37, 41,
+		25, 27, 34, 39, 42, 34, 39, 42, 25, 27, 34, 39, 42, 34, 39, 42,
+		24, 27, 32, 39, 42, 32, 39, 42, 24, 27, 32, 39, 42, 32, 39, 42,
+		25, 29, 32, 37, 41, 32, 37, 41, 25, 29, 32, 37, 41, 32, 37, 41,
+	};
 	size_t song_length = sizeof song / sizeof song[0];
 	song_play(song, song_length);
 
