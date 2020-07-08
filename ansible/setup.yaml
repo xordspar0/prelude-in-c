@@ -19,3 +19,26 @@
       pkgin:
         name: gmake
         state: present
+- hosts: freebsd
+  remote_user: root
+  tasks:
+    - name: Install rsync
+      pkgng:
+        name: rsync
+        state: present
+    - name: Install gmake
+      pkgng:
+        name: gmake
+        state: present
+
+- hosts: all
+  remote_user: root
+  tasks:
+    - name: Add user test
+      user:
+        name: test
+    - name: Set authorized key for user test
+      authorized_key:
+        user: test
+        state: present
+        key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"

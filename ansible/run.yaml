@@ -1,9 +1,12 @@
 ---
 - hosts: all
+  remote_user: test
   vars:
-    user: jordan
-    srcdir: /home/{{user}}/src/prelude
+    srcdir: /home/test/src/prelude
   tasks:
+    - name: Make source directory
+      command:
+        cmd: mkdir -p "{{srcdir}}"
     - name: Copy source
       synchronize:
         # Why do we need to go up 2 directories here? Bug in syncronize module?
