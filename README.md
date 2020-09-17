@@ -27,3 +27,8 @@ An implementation of Bach's [Prelude in C, BWV
   write portable Makefiles. I haven't figured that out yet, so it currently
   uses GNU make.
 * It's in a file called prelude.c!
+
+## How to run it
+
+    make
+    ./prelude
