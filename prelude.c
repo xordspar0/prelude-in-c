@@ -50,7 +50,7 @@ static int pitchtab[] =
  *
  * Returns the size of the new buffer in bytes.
  */
-size_t gen_note(float **bufptr, int note, double duration)
+size_t gen_note(float **bufptr, int note, int start_time, double duration)
 {
 	size_t length = duration * SOUND_SAMPLE_RATE;
 	float *buf = calloc(length, sizeof(float));
@@ -66,7 +66,7 @@ size_t gen_note(float **bufptr, int note, double duration)
 	for (int i = 0; i < length; i++) {
 		buf[i] =
 		    (2 * AMPLITUDE / M_PI) *
-		    asinf(sinf(i * 2 * M_PI / (SOUND_SAMPLE_RATE / freq)));
+		    asinf(sinf((start_time + i) * 2 * M_PI / (SOUND_SAMPLE_RATE / freq)));
 	}
 
 	*bufptr = buf;
@@ -82,6 +82,7 @@ void song_play(int song[], size_t length)
 	float *buf = NULL;
 	for (int i = 0; i < length; i++) {
 		size_t size = gen_note(&buf, song[i],
+				       t,
 				       (double) SECONDS_PER_MINUTE / BPM);
 
 		int err = sound_play(buf, size);
@@ -90,8 +91,8 @@ void song_play(int song[], size_t length)
 			return;
 		}
 
+		t += size / sizeof buf[0];
 		free(buf);
-		t += size;
 	}
 }
 
