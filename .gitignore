@@ -1,2 +1,7 @@
+# Build files
+prelude
+config.mk
+*.o
+
 # Editor files
 *.swp

@@ -1,34 +1,15 @@
-# Requires GNU Make. I would like to use POSIX make, or at least a common set
-# of features that work with GNU Make and the BSD makes, but I can't figure out
-# how to make it work with the conditional compiling and linking.
+.POSIX:
+.SUFFIXES:
+include config.mk
 
-CC = cc
-CFLAGS = -Wall -Werror -g -pedantic
-LDFLAGS =
-LDLIBS = -lm
-
-platform != uname -s
-ifeq ($(platform), Linux)
-	platform_sound = sound/linux.c 
-	LDLIBS += -lpulse -lpulse-simple
-else ifeq ($(platform), NetBSD)
-	platform_sound = sound/netbsd.c
-else
-	platform_sound = $(error Platform not supported)
-endif
-platform_object = $(platform_sound:.c=.o)
-
-prelude: prelude.o sound.o
-	$(CC) -o $@ $(CFLAGS) $(LDFLAGS) $^ $(LDLIBS)
-
+prelude: prelude.o sound/$(PLATFORM).o
+	$(CC) $(LDLIBS) -o prelude prelude.o sound/$(PLATFORM).o
 prelude.o: prelude.c sound.h
-sound.o: $(platform_object)
-	cp $< $@
+$(PLATFORM).o: $(PLATFORM).c sound.h
 
-$(platform_object): $(platform_sound) sound.h
-
-%.o: %.c
-	$(CC) -o $@ $< $(CFLAGS) -c
+.SUFFIXES: .c .o
+.c.o:
+	$(CC) $(CFLAGS) -o $@ -c $<
 
 .PHONY: clean
 clean:

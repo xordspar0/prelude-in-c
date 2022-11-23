@@ -15,20 +15,12 @@
       pkgin:
         name: rsync
         state: present
-    - name: Install gmake
-      pkgin:
-        name: gmake
-        state: present
 - hosts: freebsd
   remote_user: root
   tasks:
     - name: Install rsync
       pkgng:
         name: rsync
-        state: present
-    - name: Install gmake
-      pkgng:
-        name: gmake
         state: present
 
 - hosts: all

@@ -1,0 +1,19 @@
+#!/bin/sh -eu
+
+PLATFORM=$(uname | tr '[:upper:]' '[:lower:]')
+CC=${CC:-cc}
+CFLAGS=${CFLAGS:--Wall -Werror -g -pedantic}
+LDLIBS=-lm
+
+case $PLATFORM in
+	linux)
+		LDLIBS="$LDLIBS $(pkg-config --libs libpulse-simple)"
+		;;
+esac
+
+cat <<EOF >config.mk 
+PLATFORM=$PLATFORM
+CC=$CC
+CFLAGS=$CFLAGS
+LDLIBS=$LDLIBS
+EOF

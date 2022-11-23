@@ -14,14 +14,18 @@
         dest: "{{srcdir}}"
         rsync_opts:
           - "--exclude=.git"
+    - name: Clean
+      command:
+        chdir: "{{srcdir}}"
+        cmd: make clean
     - name: Prepare
       command:
         chdir: "{{srcdir}}"
-        cmd: gmake clean
-    - name: Compile
+        cmd: ./configure
+    - name: Build
       command:
         chdir: "{{srcdir}}"
-        cmd: gmake
+        cmd: make
     - name: Execute
       command:
         chdir: "{{srcdir}}"

@@ -23,12 +23,10 @@ An implementation of Bach's [Prelude in C, BWV
 * I want to port it to every free operating system I can get my hands on.
 * No third-party libraries. I actually want to learn the platform-specific
   APIs.
-* I want it to build with a plain Makefile. I'm interested in learning how to
-  write portable Makefiles. I haven't figured that out yet, so it currently
-  uses GNU make.
 * It's in a file called prelude.c!
 
 ## How to run it
 
+    ./configure
     make
     ./prelude
