@@ -7,7 +7,7 @@ LDLIBS=-lm
 
 case $PLATFORM in
 	linux)
-		LDLIBS="$LDLIBS $(pkg-config --libs libpulse-simple)"
+		LDLIBS="$LDLIBS $(pkg-config --libs alsa)"
 		;;
 esac
 

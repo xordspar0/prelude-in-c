@@ -1,31 +1,32 @@
 #include <stdio.h>
 
-#include <pulse/error.h>
-#include <pulse/simple.h>
+#include <alsa/asoundlib.h>
 
 #include "../sound.h"
 
-static pa_simple *stream = NULL;
+static snd_pcm_t *stream = NULL;
 
 int sound_open()
 {
-	pa_sample_spec spec;
 	int err = 0;
 
-	spec.format = PA_SAMPLE_FLOAT32LE;
-	spec.channels = 1;
-	spec.rate = SOUND_SAMPLE_RATE;
+	err = snd_pcm_open(&stream, "default", SND_PCM_STREAM_PLAYBACK, 0);
+	if (err) {
+		fprintf(stderr, "Failed to open stream: %s\n",
+			snd_strerror(err));
+		return 1;
+	}
 
-	stream = pa_simple_new(NULL,
-			       "prelude",
-			       PA_STREAM_PLAYBACK,
-			       NULL,
-			       "Play Bach's Prelude in C",
-			       &spec, NULL, NULL, &err);
-
-	if (stream == NULL) {
-		fprintf(stderr, "Failed to open pulseaudio stream: %s\n",
-			pa_strerror(err));
+	err = snd_pcm_set_params(stream,
+			SND_PCM_FORMAT_FLOAT_LE,
+			SND_PCM_ACCESS_RW_INTERLEAVED,
+			1,
+			SOUND_SAMPLE_RATE,
+			1,
+			500000);
+	if (err) {
+		fprintf(stderr, "Failed to configure stream: %s\n",
+			snd_strerror(err));
 		return 1;
 	}
 
@@ -34,12 +35,12 @@ int sound_open()
 
 int sound_play(float *buf, size_t bufsize)
 {
-	int err = 0;
-	int count = pa_simple_write(stream, buf, bufsize, &err);
+	snd_pcm_sframes_t count = snd_pcm_writei(
+			stream, buf, bufsize / sizeof buf[0]);
 	if (count < 0) {
 		fprintf(stderr,
-			"Failed to write to pulseaudio stream: %s\n",
-			pa_strerror(err));
+			"Failed to write to stream: %s\n",
+			snd_strerror(count));
 		return 1;
 	}
 
@@ -48,5 +49,11 @@ int sound_play(float *buf, size_t bufsize)
 
 void sound_close()
 {
-	pa_simple_free(stream);
+	int err = snd_pcm_drain(stream);
+	if (err) {
+		fprintf(stderr,
+			"Failed to drain stream: %s\n",
+			snd_strerror(err));
+	}
+	snd_pcm_close(stream);
 }
