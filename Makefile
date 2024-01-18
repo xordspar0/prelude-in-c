@@ -3,7 +3,7 @@
 include config.mk
 
 prelude: prelude.o sound/$(PLATFORM).o
-	$(CC) $(LDLIBS) -o prelude prelude.o sound/$(PLATFORM).o
+	$(CC) -o prelude prelude.o sound/$(PLATFORM).o $(LDLIBS)
 prelude.o: prelude.c sound.h
 $(PLATFORM).o: $(PLATFORM).c sound.h
 
