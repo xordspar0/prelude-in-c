@@ -5,8 +5,8 @@
 
 #include "sound.h"
 
-#define AMPLITUDE 0.8
-#define BPM 200
+#define AMPLITUDE 0.25
+#define SIXTEENTH_NOTES_PER_MINUTE 320
 #define SECONDS_PER_MINUTE 60
 
 /*
@@ -83,7 +83,7 @@ void song_play(int song[], size_t length)
 	for (int i = 0; i < length; i++) {
 		size_t size = gen_note(&buf, song[i],
 				       t,
-				       (double) SECONDS_PER_MINUTE / BPM);
+				       (double) SECONDS_PER_MINUTE / SIXTEENTH_NOTES_PER_MINUTE);
 
 		int err = sound_play(buf, size);
 		if (err != 0) {
