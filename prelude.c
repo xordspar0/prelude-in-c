@@ -5,7 +5,7 @@
 
 #include "sound.h"
 
-#define AMPLITUDE 0.25
+#define AMPLITUDE 0.20
 #define SIXTEENTH_NOTES_PER_MINUTE 320
 #define SECONDS_PER_MINUTE 60
 
@@ -64,26 +64,24 @@ size_t gen_note(float **bufptr, int note, int start_time, double duration)
 	double freq = pitchtab[note - 1];
 
 	for (int i = 0; i < length; i++) {
-		buf[i] =
-		    (2 * AMPLITUDE / M_PI) *
-		    asinf(sinf((start_time + i) * 2 * M_PI / (SOUND_SAMPLE_RATE / freq)));
+		buf[i] = fmod(AMPLITUDE * (start_time + i) * freq / SOUND_SAMPLE_RATE, AMPLITUDE) - AMPLITUDE / 2;
 	}
 
 	*bufptr = buf;
 	return length * sizeof(float);
 }
 
-/*
- * TODO: Remove sudden waveform changes between notes.
- */
 void song_play(int song[], size_t length)
 {
 	double t = 0;
 	float *buf = NULL;
 	for (int i = 0; i < length; i++) {
-		size_t size = gen_note(&buf, song[i],
-				       t,
-				       (double) SECONDS_PER_MINUTE / SIXTEENTH_NOTES_PER_MINUTE);
+		size_t size = gen_note(
+			&buf,
+			song[i],
+			t,
+			(double) SECONDS_PER_MINUTE / SIXTEENTH_NOTES_PER_MINUTE
+		);
 
 		int err = sound_play(buf, size);
 		if (err != 0) {
