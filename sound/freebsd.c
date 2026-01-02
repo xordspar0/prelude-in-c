@@ -41,16 +41,15 @@ int sound_open()
 	return 0;
 }
 
-int sound_play(float *buf, size_t bufsize)
+int sound_play(float *buf, size_t buflen)
 {
-	size_t n_items = bufsize / sizeof buf[0];
-	int32_t ibuf[n_items];
+	int32_t ibuf[buflen];
 
-	for (int i = 0; i < n_items; i++) {
+	for (int i = 0; i < buflen; i++) {
 		ibuf[i] = buf[i] * (float)INT32_MAX;
 	}
 
-	int count = write(stream, ibuf, bufsize);
+	int count = write(stream, ibuf, sizeof(ibuf) * sizeof(ibuf[0]));
 	if (count < 0) {
 		perror("Failed to write to stream");
 		return 1;

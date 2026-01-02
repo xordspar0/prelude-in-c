@@ -33,10 +33,10 @@ int sound_open()
 	return 0;
 }
 
-int sound_play(float *buf, size_t bufsize)
+int sound_play(float *buf, size_t buflen)
 {
 	snd_pcm_sframes_t count = snd_pcm_writei(
-			stream, buf, bufsize / sizeof buf[0]);
+			stream, buf, buflen);
 	if (count < 0) {
 		fprintf(stderr,
 			"Failed to write to stream: %s\n",

@@ -6,8 +6,8 @@
 #include "sound.h"
 
 #define AMPLITUDE 0.20
-#define SIXTEENTH_NOTES_PER_MINUTE 320
-#define SECONDS_PER_MINUTE 60
+#define SIXTEENTH_NOTES_PER_MINUTE 320.0
+#define SECONDS_PER_MINUTE 60.0
 
 /*
  * The pitch table is taken from the source code of Eric S. Raymond's speaker
@@ -43,54 +43,46 @@ static int pitchtab[] =
 };
 
 /*
- * Note is the MML note number. It corresponds to the index of pitchtab plus
- * 1. MML notes can be in the range 1-84.
+ * buf: An array of floats
+ * buflen: The length of the array
+ * note: An MML note number. It corresponds to the index of pitchtab plus 1.
+ *   MML notes can be in the range 1-84.
+ * t: The index of the first sample in the buffer relative to the beginning
+ *   of the song. Used to align consecutive notes.
  *
- * Duration is how many seconds to write into the buffer.
- *
- * Returns the size of the new buffer in bytes.
+ * Returns the number of samples written to the buffer.
  */
-size_t gen_note(float **bufptr, int note, int start_time, double duration)
+size_t gen_note(float *buf, size_t buflen, size_t note, size_t t)
 {
-	size_t length = duration * SOUND_SAMPLE_RATE;
-	float *buf = calloc(length, sizeof(float));
-	if (buf == NULL) {
-		if (errno != 0) {
-			perror("gen_note failed to allocate a buffer");
-		}
-		return 0;
-	}
-
 	double freq = pitchtab[note - 1];
 
-	for (int i = 0; i < length; i++) {
-		buf[i] = fmod(AMPLITUDE * (start_time + i) * freq / SOUND_SAMPLE_RATE, AMPLITUDE) - AMPLITUDE / 2;
+	int i;
+	for (i = 0; i < buflen; i++) {
+		buf[i] = fmod(AMPLITUDE * (t + i) * freq / SOUND_SAMPLE_RATE, AMPLITUDE) - AMPLITUDE / 2;
 	}
 
-	*bufptr = buf;
-	return length * sizeof(float);
+	return i;
 }
 
 void song_play(int song[], size_t length)
 {
-	double t = 0;
-	float *buf = NULL;
-	for (int i = 0; i < length; i++) {
-		size_t size = gen_note(
-			&buf,
+	size_t t = 0;
+	const size_t buflen = SECONDS_PER_MINUTE / SIXTEENTH_NOTES_PER_MINUTE * SOUND_SAMPLE_RATE;
+	float buf[buflen] = {};
+
+	for (size_t i = 0; i < length; i++) {
+		t += gen_note(
+			buf,
+			buflen,
 			song[i],
-			t,
-			(double) SECONDS_PER_MINUTE / SIXTEENTH_NOTES_PER_MINUTE
+			t
 		);
 
-		int err = sound_play(buf, size);
+		int err = sound_play(buf, buflen);
 		if (err != 0) {
 			fputs("Failed to play sound\n", stderr);
 			return;
 		}
-
-		t += size / sizeof buf[0];
-		free(buf);
 	}
 }
 
