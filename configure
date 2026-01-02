@@ -11,7 +11,7 @@ case $PLATFORM in
 		;;
 esac
 
-cat <<EOF >config.mk 
+cat <<EOF | tee config.mk
 PLATFORM=$PLATFORM
 CC=$CC
 CFLAGS=$CFLAGS
