@@ -49,7 +49,7 @@ int sound_play(float *buf, size_t buflen)
 		ibuf[i] = buf[i] * (float)INT32_MAX;
 	}
 
-	int count = write(stream, ibuf, sizeof(ibuf) * sizeof(ibuf[0]));
+	int count = write(stream, ibuf, sizeof ibuf);
 	if (count < 0) {
 		perror("Failed to write to stream");
 		return 1;

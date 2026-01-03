@@ -6,8 +6,8 @@
 #include "sound.h"
 
 #define AMPLITUDE 0.20
-#define SIXTEENTH_NOTES_PER_MINUTE 320.0
-#define SECONDS_PER_MINUTE 60.0
+#define SIXTEENTH_NOTES_PER_MINUTE 320
+#define SECONDS_PER_MINUTE 60
 
 /*
  * The pitch table is taken from the source code of Eric S. Raymond's speaker
@@ -64,13 +64,14 @@ size_t gen_note(float *buf, size_t buflen, size_t note, size_t t)
 	return i;
 }
 
-void song_play(int song[], size_t length)
+#define buflen (SECONDS_PER_MINUTE * SOUND_SAMPLE_RATE / SIXTEENTH_NOTES_PER_MINUTE)
+
+void song_play(int song[], size_t songlen)
 {
 	size_t t = 0;
-	const size_t buflen = SECONDS_PER_MINUTE / SIXTEENTH_NOTES_PER_MINUTE * SOUND_SAMPLE_RATE;
-	float buf[buflen] = {};
+	float buf[buflen] = {0};
 
-	for (size_t i = 0; i < length; i++) {
+	for (size_t i = 0; i < songlen; i++) {
 		t += gen_note(
 			buf,
 			buflen,
