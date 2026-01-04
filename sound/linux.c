@@ -6,7 +6,7 @@
 
 static snd_pcm_t *stream = NULL;
 
-int sound_open()
+int sound_open(void)
 {
 	int err = 0;
 
@@ -47,7 +47,7 @@ int sound_play(float *buf, size_t buflen)
 	return 0;
 }
 
-void sound_close()
+void sound_close(void)
 {
 	int err = snd_pcm_drain(stream);
 	if (err) {

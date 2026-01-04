@@ -3,4 +3,4 @@ all:
     netbsd:
       ansible_host: 192.168.100.250
     freebsd:
-      ansible_host: 192.168.100.189
+      ansible_host: 192.168.100.251

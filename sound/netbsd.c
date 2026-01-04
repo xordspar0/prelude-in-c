@@ -12,7 +12,7 @@
 
 static int stream = 0;
 
-int sound_open()
+int sound_open(void)
 {
 	stream = open("/dev/sound", O_WRONLY);
 	if (stream < 0) {
@@ -53,7 +53,7 @@ int sound_play(float *buf, size_t buflen)
 	return 0;
 }
 
-void sound_close()
+void sound_close(void)
 {
 	int err = close(stream);
 	if (err < 0) {
