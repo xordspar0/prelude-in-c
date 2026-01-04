@@ -58,7 +58,7 @@ size_t gen_note(float *buf, size_t buflen, size_t note, size_t t)
 
 	int i;
 	for (i = 0; i < buflen; i++) {
-		buf[i] = fmod(AMPLITUDE * (t + i) * freq / SOUND_SAMPLE_RATE, AMPLITUDE) - AMPLITUDE / 2;
+		buf[i] = AMPLITUDE * (fmod((t + i) * freq / SOUND_SAMPLE_RATE, 1) - 0.5);
 	}
 
 	return i;
