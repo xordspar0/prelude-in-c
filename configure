@@ -6,6 +6,11 @@ CFLAGS=${CFLAGS:--Wall -Werror -g -pedantic}
 LDLIBS=-lm
 
 case $PLATFORM in
+	haiku)
+		CC=${CXX:-c++}
+		CFLAGS="$CFLAGS -std=c++20"
+		LDLIBS="$LDLIBS -lbe -lmedia"
+		;;
 	linux)
 		LDLIBS="$LDLIBS $(pkg-config --libs alsa)"
 		;;
